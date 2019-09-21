@@ -49,7 +49,7 @@ impl fmt::Display for Style {
 
         write!(
             f,
-            "\x1b[{}{};{}m",
+            "%{{\x1b[{}{};{}m%}}",
             if self.bold { "1;" } else { "0;" },
             fg,
             bg

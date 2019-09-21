@@ -245,7 +245,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "shellblocks"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "dirs 2.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "gethostname 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",

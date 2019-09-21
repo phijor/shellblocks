@@ -60,7 +60,7 @@ pub fn format<'a, I: Iterator<Item = &'a Block>>(blocks: I) -> String {
     fn separator(current_style: &Style, next_style: Option<&Style>) -> String {
         match next_style {
             None => format!(
-                "{} \x1b[0m",
+                "{} %{{\x1b[0m%}}",
                 Style {
                     bold: false,
                     fg: current_style.bg,
