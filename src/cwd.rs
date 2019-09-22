@@ -46,7 +46,8 @@ impl Cwd {
                         compoments.splice(2..len - 2, Some("…"));
                     }
 
-                    let (initials, last) = compoments.split_at(len - 1);
+                    let len = compoments.len();
+                    let (initials, last) = compoments.split_at(len.saturating_sub(1));
                     for compoment in initials {
                         shortened.push(first_char(compoment));
                     }
