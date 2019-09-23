@@ -1,9 +1,14 @@
 use crate::block::Block;
 use crate::source::Source;
-use crate::style::{BaseColor, Brightness, Color};
+use crate::style::{BaseColor, Brightness, Color, Style};
 
 use std::fs::read_to_string;
 use std::path::{Path, PathBuf};
+
+const STYLE: Style = Style::new()
+    .with_fg(Color::new(BaseColor::WHITE, Brightness::NORMAL))
+    .with_bg(Color::new(BaseColor::BLACK, Brightness::BRIGHT))
+    .with_bold();
 
 pub struct Git {
     path: PathBuf,
@@ -36,11 +41,7 @@ impl Git {
 
 impl Source for Git {
     fn get_block(&self) -> Option<Block> {
-        self.current_brach().map(|branch| {
-            Block::new(format!(" {}", branch))
-                .with_fg(Color::new(BaseColor::WHITE, Brightness::NORMAL))
-                .with_bg(Color::new(BaseColor::BLACK, Brightness::BRIGHT))
-                .with_bold()
-        })
+        self.current_brach()
+            .map(|branch| Block::new(format!(" {}", branch)).with_style(STYLE))
     }
 }

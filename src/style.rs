@@ -38,6 +38,34 @@ pub struct Style {
     pub bg: Option<Color>,
 }
 
+impl Style {
+    pub const fn new() -> Self {
+        Self {
+            bold: false,
+            fg: None,
+            bg: None,
+        }
+    }
+
+    pub const fn with_fg(self, fg: Color) -> Self {
+        Self {
+            fg: Some(fg),
+            ..self
+        }
+    }
+
+    pub const fn with_bg(self, bg: Color) -> Self {
+        Self {
+            bg: Some(bg),
+            ..self
+        }
+    }
+
+    pub const fn with_bold(self) -> Self {
+        Self { bold: true, ..self }
+    }
+}
+
 impl fmt::Display for Style {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let color_val = |color: Option<Color>| match color {

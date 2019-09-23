@@ -1,4 +1,4 @@
-use crate::style::{Color, Style};
+use crate::style::Style;
 
 use std::fmt;
 
@@ -15,32 +15,9 @@ impl Block {
         }
     }
 
-    pub fn with_fg(self, fg: Color) -> Self {
+    pub fn with_style(self, style: Style) -> Self {
         Block {
-            style: Style {
-                fg: Some(fg),
-                ..self.style
-            },
-            ..self
-        }
-    }
-
-    pub fn with_bg(self, bg: Color) -> Self {
-        Block {
-            style: Style {
-                bg: Some(bg),
-                ..self.style
-            },
-            ..self
-        }
-    }
-
-    pub fn with_bold(self) -> Self {
-        Block {
-            style: Style {
-                bold: true,
-                ..self.style
-            },
+            style: style,
             ..self
         }
     }

@@ -1,12 +1,16 @@
 use crate::block::Block;
 use crate::source::Source;
-use crate::style::{BaseColor, Brightness, Color};
+use crate::style::{BaseColor, Brightness, Color, Style};
 
 use std::borrow::Cow;
 use std::ffi::OsStr;
 use std::path::{Path, PathBuf};
 
 use dirs::home_dir;
+
+const STYLE: Style = Style::new()
+    .with_bg(Color::new(BaseColor::BLUE, Brightness::BRIGHT))
+    .with_bold();
 
 pub struct Cwd(PathBuf);
 
@@ -62,10 +66,7 @@ impl Cwd {
 
 impl Source for Cwd {
     fn get_block(&self) -> Option<Block> {
-        self.shortened().map(|path: PathBuf| {
-            Block::new(path.display().to_string())
-                .with_bg(Color::new(BaseColor::BLUE, Brightness::BRIGHT))
-                .with_bold()
-        })
+        self.shortened()
+            .map(|path: PathBuf| Block::new(path.display().to_string()).with_style(STYLE))
     }
 }

@@ -1,8 +1,13 @@
 use crate::block::Block;
 use crate::source::Source;
-use crate::style::{BaseColor, Brightness, Color};
+use crate::style::{BaseColor, Brightness, Color, Style};
 
 use std::env;
+
+const STYLE: Style = Style::new()
+    .with_bg(Color::new(BaseColor::BLACK, Brightness::BRIGHT))
+    .with_fg(Color::new(BaseColor::GREEN, Brightness::NORMAL))
+    .with_bold();
 
 #[derive(Default)]
 pub struct Pipenv;
@@ -19,12 +24,7 @@ impl Pipenv {
 impl Source for Pipenv {
     fn get_block(&self) -> Option<Block> {
         if self.is_pipenv() {
-            Some(
-                Block::new("🐍".to_string())
-                    .with_bg(Color::new(BaseColor::BLACK, Brightness::BRIGHT))
-                    .with_fg(Color::new(BaseColor::GREEN, Brightness::NORMAL))
-                    .with_bold(),
-            )
+            Some(Block::new("🐍".to_string()).with_style(STYLE))
         } else {
             None
         }

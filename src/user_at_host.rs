@@ -1,6 +1,6 @@
 use crate::block::Block;
 use crate::source::Source;
-use crate::style::{BaseColor, Brightness, Color};
+use crate::style::{BaseColor, Brightness, Color, Style};
 
 use gethostname::gethostname;
 use libc::{geteuid, getpwuid, passwd};
@@ -30,10 +30,10 @@ impl Source for UserAtHost {
             BaseColor::BLUE
         };
 
-        Some(
-            Block::new(format!("{}@{}", username, hostname.to_str()?))
-                .with_fg(Color::new(BaseColor::BLACK, Brightness::NORMAL))
-                .with_bg(Color::new(bg_color, Brightness::NORMAL)),
-        )
+        let style = Style::new()
+            .with_fg(Color::new(BaseColor::BLACK, Brightness::NORMAL))
+            .with_bg(Color::new(bg_color, Brightness::NORMAL));
+
+        Some(Block::new(format!("{}@{}", username, hostname.to_str()?)).with_style(style))
     }
 }
