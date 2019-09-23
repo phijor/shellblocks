@@ -14,6 +14,7 @@ use crate::source::Source;
 use crate::user_at_host::UserAtHost;
 
 use std::env;
+use std::io::{self, Write};
 use std::ops::Deref;
 
 struct Blocks(Vec<Block>);
@@ -53,8 +54,10 @@ impl Deref for Blocks {
     }
 }
 
-fn main() {
+fn main() -> io::Result<()> {
     let blocks = Blocks::from_names(env::args().skip(1));
     let prompt = format(blocks.iter());
-    print!("{}", prompt);
+    io::stdout().write(prompt.as_bytes())?;
+
+    Ok(())
 }
