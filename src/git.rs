@@ -53,11 +53,11 @@ impl Git {
 
     fn current_state(&self) -> Option<CurrentState> {
         self.root().map(|root| {
-            for (ref_file, state) in &[
+            for (indicator_file, state) in &[
+                (".git/rebase-merge", CurrentState::Rebasing),
                 (".git/MERGE_HEAD", CurrentState::Merging),
-                (".git/REBASE_HEAD", CurrentState::Rebasing),
             ] {
-                if root.join(ref_file).exists() {
+                if root.join(indicator_file).exists() {
                     return *state;
                 }
             }
