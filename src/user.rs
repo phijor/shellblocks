@@ -2,15 +2,14 @@ use crate::block::Block;
 use crate::source::Source;
 use crate::style::{BaseColor, Brightness, Color, Style};
 
-use gethostname::gethostname;
 use libc::{geteuid, getpwuid, passwd};
 
 use std::ffi::CStr;
 
 #[derive(Default)]
-pub struct UserAtHost;
+pub struct User;
 
-impl Source for UserAtHost {
+impl Source for User {
     fn get_block(&self) -> Option<Block> {
         let euid = unsafe { geteuid() };
 
@@ -22,7 +21,6 @@ impl Source for UserAtHost {
                 CStr::from_ptr((*pw).pw_name).to_string_lossy().into_owned()
             }
         };
-        let hostname = gethostname();
 
         let bg_color = if euid == 0 {
             BaseColor::RED
@@ -34,6 +32,6 @@ impl Source for UserAtHost {
             .with_fg(Color::new(BaseColor::BLACK, Brightness::NORMAL))
             .with_bg(Color::new(bg_color, Brightness::NORMAL));
 
-        Some(Block::new(format!("{}@{}", username, hostname.to_str()?)).with_style(style))
+        Some(Block::new(username).with_style(style))
     }
 }

@@ -1,17 +1,19 @@
 mod block;
 mod cwd;
 mod git;
+mod host;
 mod pipenv;
 mod source;
 mod style;
-mod user_at_host;
+mod user;
 
 use crate::block::{format, Block};
 use crate::cwd::Cwd;
 use crate::git::Git;
+use crate::host::Host;
 use crate::pipenv::Pipenv;
 use crate::source::Source;
-use crate::user_at_host::UserAtHost;
+use crate::user::User;
 
 use std::env;
 use std::io::{self, Write};
@@ -26,7 +28,8 @@ impl Blocks {
 
         for name in names {
             let block: Option<Block> = match name.as_str() {
-                "user-at-host" => UserAtHost::default().get_block(),
+                "user" => User::default().get_block(),
+                "host" => Host::default().get_block(),
                 "cwd" => Cwd::new(&cwd).get_block(),
                 "git" => Git::new(&cwd).get_block(),
                 "pipenv" => Pipenv::default().get_block(),
