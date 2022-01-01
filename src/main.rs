@@ -39,9 +39,8 @@ impl Blocks {
                 }
             };
 
-            match block {
-                Some(block) => blocks.push(block),
-                None => {}
+            if let Some(block) = block {
+                blocks.push(block)
             }
         }
 
@@ -60,7 +59,7 @@ impl Deref for Blocks {
 fn main() -> io::Result<()> {
     let blocks = Blocks::from_names(env::args().skip(1));
     let prompt = format(blocks.iter());
-    io::stdout().write(prompt.as_bytes())?;
+    let _ = io::stdout().write(prompt.as_bytes())?;
 
     Ok(())
 }
