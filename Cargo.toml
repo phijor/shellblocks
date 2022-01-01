@@ -1,6 +1,6 @@
 [package]
 name = "shellblocks"
-version = "0.5.0"
+version = "0.5.1"
 authors = ["Philipp Joram <mail@phijor.me>"]
 edition = "2018"
 
