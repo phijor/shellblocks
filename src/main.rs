@@ -5,6 +5,7 @@ mod host;
 mod pipenv;
 mod source;
 mod style;
+mod tty;
 mod user;
 
 use crate::block::{format, Block};
@@ -14,6 +15,7 @@ use crate::host::Host;
 use crate::pipenv::Pipenv;
 use crate::source::Source;
 use crate::user::User;
+use crate::tty::Tty;
 
 use std::env;
 use std::io::{self, Write};
@@ -30,6 +32,7 @@ impl Blocks {
             let block: Option<Block> = match name.as_str() {
                 "user" => User::default().get_block(),
                 "host" => Host::default().get_block(),
+                "tty" => Tty::default().get_block(),
                 "cwd" => Cwd::new(&cwd).get_block(),
                 "git" => Git::new(&cwd).get_block(),
                 "pipenv" => Pipenv::default().get_block(),
