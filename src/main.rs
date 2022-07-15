@@ -2,6 +2,7 @@ mod block;
 mod cwd;
 mod git;
 mod host;
+mod nix;
 mod pipenv;
 mod source;
 mod style;
@@ -12,6 +13,7 @@ use crate::block::{format, Block};
 use crate::cwd::Cwd;
 use crate::git::Git;
 use crate::host::Host;
+use crate::nix::NixShell;
 use crate::pipenv::Pipenv;
 use crate::source::Source;
 use crate::user::User;
@@ -36,6 +38,7 @@ impl Blocks {
                 "cwd" => Cwd::new(&cwd).get_block(),
                 "git" => Git::new(&cwd).get_block(),
                 "pipenv" => Pipenv::default().get_block(),
+                "nix" => NixShell::default().get_block(),
                 _ => {
                     eprintln!("Unknown source {}", name);
                     continue;
