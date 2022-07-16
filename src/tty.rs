@@ -8,8 +8,8 @@ use std::os::unix::ffi::OsStrExt;
 use std::path::PathBuf;
 
 const STYLE: Style = Style::new()
-    .with_fg(Color::new(BaseColor::BLACK, Brightness::NORMAL))
-    .with_bg(Color::new(BaseColor::YELLOW, Brightness::NORMAL));
+    .with_fg(Color::new(BaseColor::Black, Brightness::Normal))
+    .with_bg(Color::new(BaseColor::Yellow, Brightness::Normal));
 
 #[derive(Default)]
 pub struct Tty;
@@ -38,7 +38,7 @@ impl Tty {
 
 impl Source for Tty {
     fn get_block(&self, _: &Context) -> Option<Block> {
-        let path = Self::from_system().or_else(|| Self::from_env())?;
+        let path = Self::from_system().or_else(Self::from_env)?;
         let ispts = path
             .iter()
             .any(|component| component.to_str().map(|c| c == "pts").unwrap_or(false));

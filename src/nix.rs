@@ -5,8 +5,8 @@ use crate::style::{BaseColor, Brightness, Color, Style};
 use std::env;
 
 const STYLE: Style = Style::new()
-    .with_bg(Color::new(BaseColor::BLACK, Brightness::BRIGHT))
-    .with_fg(Color::new(BaseColor::BLUE, Brightness::NORMAL))
+    .with_bg(Color::new(BaseColor::Black, Brightness::Bright))
+    .with_fg(Color::new(BaseColor::Blue, Brightness::Normal))
     .with_bold();
 
 #[derive(Default)]

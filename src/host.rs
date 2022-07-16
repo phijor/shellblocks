@@ -12,8 +12,8 @@ impl Source for Host {
         Some(
             Block::new(gethostname().to_str()?.to_string()).with_style(
                 Style::new()
-                    .with_fg(Color::new(BaseColor::BLACK, Brightness::NORMAL))
-                    .with_bg(Color::new(BaseColor::BLUE, Brightness::NORMAL)),
+                    .with_fg(Color::new(BaseColor::Black, Brightness::Normal))
+                    .with_bg(Color::new(BaseColor::Blue, Brightness::Normal)),
             ),
         )
     }

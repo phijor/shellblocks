@@ -23,14 +23,14 @@ impl Source for User {
         };
 
         let bg_color = if euid == 0 {
-            BaseColor::RED
+            BaseColor::Red
         } else {
-            BaseColor::BLUE
+            BaseColor::Blue
         };
 
         let style = Style::new()
-            .with_fg(Color::new(BaseColor::BLACK, Brightness::NORMAL))
-            .with_bg(Color::new(bg_color, Brightness::NORMAL));
+            .with_fg(Color::new(BaseColor::Black, Brightness::Normal))
+            .with_bg(Color::new(bg_color, Brightness::Normal));
 
         Some(Block::new(username).with_style(style))
     }

@@ -9,7 +9,7 @@ use std::path::{Path, PathBuf};
 use dirs::home_dir;
 
 const STYLE: Style = Style::new()
-    .with_bg(Color::new(BaseColor::BLUE, Brightness::BRIGHT))
+    .with_bg(Color::new(BaseColor::Blue, Brightness::Bright))
     .with_bold();
 
 #[derive(Default)]

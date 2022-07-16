@@ -3,20 +3,20 @@ use std::fmt;
 #[allow(unused)]
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum BaseColor {
-    BLACK,
-    RED,
-    GREEN,
-    YELLOW,
-    BLUE,
-    MAGENTA,
-    CYAN,
-    WHITE,
+    Black,
+    Red,
+    Green,
+    Yellow,
+    Blue,
+    Magenta,
+    Cyan,
+    White,
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum Brightness {
-    NORMAL,
-    BRIGHT,
+    Normal,
+    Bright,
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]

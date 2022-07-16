@@ -6,8 +6,8 @@ use std::fs::read_to_string;
 use std::path::Path;
 
 const STYLE: Style = Style::new()
-    .with_fg(Color::new(BaseColor::WHITE, Brightness::NORMAL))
-    .with_bg(Color::new(BaseColor::BLACK, Brightness::BRIGHT))
+    .with_fg(Color::new(BaseColor::White, Brightness::Normal))
+    .with_bg(Color::new(BaseColor::Black, Brightness::Bright))
     .with_bold();
 
 pub struct GitDir<'r> {
@@ -65,14 +65,14 @@ impl Source for Git {
 
         let branch = gitdir.current_branch()?;
         let (indicator, fg) = match gitdir.current_state() {
-            CurrentState::Normal => ("", BaseColor::WHITE),
-            CurrentState::Rebasing => ("↥", BaseColor::RED),
-            CurrentState::Merging => ("⥇", BaseColor::YELLOW),
+            CurrentState::Normal => ("", BaseColor::White),
+            CurrentState::Rebasing => ("↥", BaseColor::Red),
+            CurrentState::Merging => ("⥇", BaseColor::Yellow),
         };
 
         Some(
             Block::new(format!("{} {}", indicator, branch))
-                .with_style(STYLE.with_fg(Color::new(fg, Brightness::NORMAL))),
+                .with_style(STYLE.with_fg(Color::new(fg, Brightness::Normal))),
         )
     }
 }

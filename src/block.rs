@@ -10,16 +10,13 @@ pub struct Block {
 impl Block {
     pub fn new(value: String) -> Self {
         Block {
-            value: value,
+            value,
             style: Style::default(),
         }
     }
 
     pub fn with_style(self, style: Style) -> Self {
-        Block {
-            style: style,
-            ..self
-        }
+        Block { style, ..self }
     }
 
     pub fn style(&self) -> &Style {
