@@ -1,5 +1,5 @@
 use crate::block::Block;
-use crate::source::Source;
+use crate::source::{Context, Source};
 use crate::style::{BaseColor, Brightness, Color, Style};
 
 use libc::{geteuid, getpwuid, passwd};
@@ -10,7 +10,7 @@ use std::ffi::CStr;
 pub struct User;
 
 impl Source for User {
-    fn get_block(&self) -> Option<Block> {
+    fn get_block(&self, _: &Context) -> Option<Block> {
         let euid = unsafe { geteuid() };
 
         let username: String = unsafe {

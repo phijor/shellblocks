@@ -1,18 +1,21 @@
 use crate::block::Block;
-use crate::source::Source;
+use crate::source::{Context, Source};
 use crate::style::{BaseColor, Brightness, Color, Style};
 
 use std::fs::read_to_string;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 const STYLE: Style = Style::new()
     .with_fg(Color::new(BaseColor::WHITE, Brightness::NORMAL))
     .with_bg(Color::new(BaseColor::BLACK, Brightness::BRIGHT))
     .with_bold();
 
-pub struct Git {
-    repo_root: Option<PathBuf>,
+pub struct GitDir<'r> {
+    root: &'r Path,
 }
+
+#[derive(Default)]
+pub struct Git;
 
 #[derive(Debug, Clone, Copy)]
 enum CurrentState {
@@ -21,25 +24,16 @@ enum CurrentState {
     Merging,
 }
 
-impl Git {
-    pub fn new<P: AsRef<Path>>(path: P) -> Self {
-        Self {
-            repo_root: Self::find_root(path.as_ref()),
-        }
+impl<'r> GitDir<'r> {
+    fn find(path: &'r Path) -> Option<Self> {
+        let root = path
+            .ancestors()
+            .find(|candidate| candidate.join(".git").exists())?;
+        Some(Self { root })
     }
 
-    fn find_root(path: &Path) -> Option<PathBuf> {
-        path.ancestors()
-            .find(|candidate| candidate.join(".git").exists())
-            .map(Path::to_path_buf)
-    }
-
-    fn root(&self) -> Option<&Path> {
-        self.repo_root.as_ref().map(|root| root.as_ref())
-    }
-
-    pub fn current_brach(&self) -> Option<String> {
-        let head = read_to_string(self.root()?.join(".git/HEAD")).ok()?;
+    pub fn current_branch(&self) -> Option<String> {
+        let head = read_to_string(self.root.join(".git/HEAD")).ok()?;
         Some(Self::shorten(head.trim_end().trim_start_matches("ref: refs/heads/")).to_string())
     }
 
@@ -51,26 +45,26 @@ impl Git {
         }
     }
 
-    fn current_state(&self) -> Option<CurrentState> {
-        self.root().map(|root| {
-            for (indicator_file, state) in &[
-                (".git/rebase-merge", CurrentState::Rebasing),
-                (".git/MERGE_HEAD", CurrentState::Merging),
-            ] {
-                if root.join(indicator_file).exists() {
-                    return *state;
-                }
+    fn current_state(&self) -> CurrentState {
+        for (indicator_file, state) in &[
+            (".git/rebase-merge", CurrentState::Rebasing),
+            (".git/MERGE_HEAD", CurrentState::Merging),
+        ] {
+            if self.root.join(indicator_file).exists() {
+                return *state;
             }
+        }
 
-            CurrentState::Normal
-        })
+        CurrentState::Normal
     }
 }
 
 impl Source for Git {
-    fn get_block(&self) -> Option<Block> {
-        let branch = self.current_brach()?;
-        let (indicator, fg) = match self.current_state()? {
+    fn get_block(&self, context: &Context) -> Option<Block> {
+        let gitdir = GitDir::find(context.current_dir())?;
+
+        let branch = gitdir.current_branch()?;
+        let (indicator, fg) = match gitdir.current_state() {
             CurrentState::Normal => ("", BaseColor::WHITE),
             CurrentState::Rebasing => ("↥", BaseColor::RED),
             CurrentState::Merging => ("⥇", BaseColor::YELLOW),

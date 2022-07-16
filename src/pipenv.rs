@@ -1,5 +1,5 @@
 use crate::block::Block;
-use crate::source::Source;
+use crate::source::{Context, Source};
 use crate::style::{BaseColor, Brightness, Color, Style};
 
 use std::env;
@@ -22,7 +22,7 @@ impl Pipenv {
 }
 
 impl Source for Pipenv {
-    fn get_block(&self) -> Option<Block> {
+    fn get_block(&self, _: &Context) -> Option<Block> {
         if self.is_pipenv() {
             Some(Block::new("🐍".to_string()).with_style(STYLE))
         } else {

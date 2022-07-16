@@ -1,5 +1,5 @@
 use crate::block::Block;
-use crate::source::Source;
+use crate::source::{Context, Source};
 use crate::style::{BaseColor, Brightness, Color, Style};
 
 use std::borrow::Cow;
@@ -12,13 +12,8 @@ const STYLE: Style = Style::new()
     .with_bg(Color::new(BaseColor::BLUE, Brightness::BRIGHT))
     .with_bold();
 
-pub struct Cwd(PathBuf);
-
-impl Cwd {
-    pub fn new<P: AsRef<Path>>(path: &P) -> Self {
-        Cwd(path.as_ref().to_path_buf())
-    }
-}
+#[derive(Default)]
+pub struct Cwd;
 
 fn first_char(s: &str) -> &str {
     match s.char_indices().nth(1) {
@@ -64,16 +59,16 @@ fn shorten(path: &Path) -> Option<PathBuf> {
 }
 
 impl Cwd {
-    fn shortened(&self) -> Option<PathBuf> {
+    fn shortened(&self, current_dir: &Path) -> Option<PathBuf> {
         let home = home_dir()?;
-        let abbreviated = abbreviate_home(&home, &self.0);
+        let abbreviated = abbreviate_home(&home, current_dir);
         shorten(abbreviated.as_ref())
     }
 }
 
 impl Source for Cwd {
-    fn get_block(&self) -> Option<Block> {
-        self.shortened()
+    fn get_block(&self, context: &Context) -> Option<Block> {
+        self.shortened(context.current_dir())
             .map(|path: PathBuf| Block::new(path.display().to_string()).with_style(STYLE))
     }
 }
