@@ -6,7 +6,7 @@ use std::env;
 
 const STYLE: Style = Style::new()
     .with_bg(Color::new(BaseColor::BLACK, Brightness::BRIGHT))
-    .with_fg(Color::new(BaseColor::BLACK, Brightness::NORMAL))
+    .with_fg(Color::new(BaseColor::BLUE, Brightness::NORMAL))
     .with_bold();
 
 #[derive(Default)]
