@@ -8,10 +8,13 @@ mod git;
 mod host;
 mod nix;
 mod pipenv;
+mod shell;
 mod source;
 mod style;
 mod tty;
 mod user;
+
+use shell::ShellLevel;
 
 use crate::block::{format, Block};
 use crate::cwd::Cwd;
@@ -43,6 +46,7 @@ impl Blocks {
                 "git" => Git::default().get_block(&context),
                 "pipenv" => Pipenv::default().get_block(&context),
                 "nix" => NixShell::default().get_block(&context),
+                "shlvl" => ShellLevel::default().get_block(&context),
                 _ => {
                     eprintln!("Unknown source {}", name);
                     continue;
