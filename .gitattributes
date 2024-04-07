@@ -1,0 +1,9 @@
+# `nix flake` compatibility files
+default.nix linguist-vendored
+shell.nix linguist-vendored
+
+# `nix flake` lock file
+flake.lock linguist-generated
+
+# crate2nix generated
+Cargo.nix linguist-generated
