@@ -1,28 +1,34 @@
 {
   inputs = {
-    cargo2nix.url = "github:cargo2nix/cargo2nix";
-    flake-utils.follows = "cargo2nix/flake-utils";
-    nixpkgs.follows = "cargo2nix/nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    crate2nix.url = "github:nix-community/crate2nix";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = inputs: with inputs;
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      crate2nix,
+      flake-utils,
+      ...
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [cargo2nix.overlays.default];
-        };
-
-        rustPkgs = pkgs.rustBuilder.makePackageSet {
-          rustVersion = "1.74.1";
-          packageFun = import ./Cargo.nix;
-        };
-        shellblocks = (rustPkgs.workspace.shellblocks {}).bin;
-      in {
+        pkgs = nixpkgs.legacyPackages.${system};
+        cargo = import ./Cargo.nix { inherit pkgs; };
+        shellblocks = cargo.rootCrate.build;
+      in
+      {
         packages = {
           inherit shellblocks;
           default = shellblocks;
         };
+        devShells = {
+          default = pkgs.mkShell { packages = [ crate2nix.packages.${system}.default ]; };
+        };
+        formatter = pkgs.nixfmt-rfc-style;
       }
     );
 }
