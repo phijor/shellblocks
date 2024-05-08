@@ -1,7 +1,6 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    crate2nix.url = "github:nix-community/crate2nix";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -9,7 +8,6 @@
     {
       self,
       nixpkgs,
-      crate2nix,
       flake-utils,
       ...
     }:
@@ -30,7 +28,7 @@
           default = shellblocks;
         };
         devShells = {
-          default = pkgs.mkShell { packages = [ crate2nix.packages.${system}.default ]; };
+          default = pkgs.mkShell { packages = [ pkgs.crate2nix ]; };
         };
         formatter = pkgs.nixfmt-rfc-style;
       }
