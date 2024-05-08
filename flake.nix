@@ -13,16 +13,20 @@
       flake-utils,
       ...
     }:
-    flake-utils.lib.eachDefaultSystem (
+    {
+      overlays.default = import ./overlay.nix;
+    }
+    // flake-utils.lib.eachDefaultSystem (
       system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
-        cargo = import ./Cargo.nix { inherit pkgs; };
-        shellblocks = cargo.rootCrate.build;
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ self.overlays.default ];
+        };
       in
       {
-        packages = {
-          inherit shellblocks;
+        packages = rec {
+          inherit (pkgs) shellblocks;
           default = shellblocks;
         };
         devShells = {
