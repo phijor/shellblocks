@@ -6,27 +6,17 @@ use crate::block::Block;
 use crate::source::{Context, Source};
 use crate::style::{BaseColor, Brightness, Color, Style};
 
-use libc::{geteuid, getpwuid, passwd};
-
-use std::ffi::CStr;
+use nix::unistd::{self, geteuid};
 
 #[derive(Default)]
 pub struct User;
 
 impl Source for User {
     fn get_block(&self, _: &Context) -> Option<Block> {
-        let euid = unsafe { geteuid() };
+        let euid = geteuid();
+        let user = unistd::User::from_uid(euid).ok()??;
 
-        let username: String = unsafe {
-            let pw: *mut passwd = getpwuid(euid);
-            if pw.is_null() {
-                panic!("Cannot find pw entry for EUID {}", euid)
-            } else {
-                CStr::from_ptr((*pw).pw_name).to_string_lossy().into_owned()
-            }
-        };
-
-        let bg_color = if euid == 0 {
+        let bg_color = if euid.is_root() {
             BaseColor::Red
         } else {
             BaseColor::Blue
@@ -36,6 +26,6 @@ impl Source for User {
             .with_fg(Color::new(BaseColor::Black, Brightness::Normal))
             .with_bg(Color::new(bg_color, Brightness::Normal));
 
-        Some(Block::new(username).with_style(style))
+        Some(Block::new(user.name).with_style(style))
     }
 }

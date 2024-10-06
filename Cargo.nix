@@ -117,6 +117,16 @@ rec {
           "rustc-dep-of-std" = [ "core" "compiler_builtins" ];
         };
       };
+      "cfg_aliases" = rec {
+        crateName = "cfg_aliases";
+        version = "0.2.1";
+        edition = "2018";
+        sha256 = "092pxdc1dbgjb6qvh83gk56rkic2n2ybm4yvy76cgynmzi3zwfk1";
+        authors = [
+          "Zicklag <zicklag@katharostech.com>"
+        ];
+
+      };
       "dirs" = rec {
         crateName = "dirs";
         version = "5.0.1";
@@ -163,28 +173,6 @@ rec {
             packageId = "windows-sys";
             target = { target, features }: (target."windows" or false);
             features = [ "Win32_UI_Shell" "Win32_Foundation" "Win32_Globalization" "Win32_System_Com" ];
-          }
-        ];
-
-      };
-      "gethostname" = rec {
-        crateName = "gethostname";
-        version = "0.4.3";
-        edition = "2021";
-        sha256 = "063qqhznyckwx9n4z4xrmdv10s0fi6kbr17r6bi1yjifki2y0xh1";
-        authors = [
-          "Sebastian Wiesner <sebastian@swsnr.de>"
-        ];
-        dependencies = [
-          {
-            name = "libc";
-            packageId = "libc";
-            target = { target, features }: (!(target."windows" or false));
-          }
-          {
-            name = "windows-targets";
-            packageId = "windows-targets";
-            target = { target, features }: (target."windows" or false);
           }
         ];
 
@@ -254,7 +242,7 @@ rec {
           "rustc-std-workspace-core" = [ "dep:rustc-std-workspace-core" ];
           "use_std" = [ "std" ];
         };
-        resolvedDefaultFeatures = [ "default" "std" ];
+        resolvedDefaultFeatures = [ "default" "extra_traits" "std" ];
       };
       "libredox" = rec {
         crateName = "libredox";
@@ -281,6 +269,53 @@ rec {
           "redox_syscall" = [ "dep:redox_syscall" ];
         };
         resolvedDefaultFeatures = [ "call" "std" ];
+      };
+      "nix" = rec {
+        crateName = "nix";
+        version = "0.29.0";
+        edition = "2021";
+        sha256 = "0ikvn7s9r2lrfdm3mx1h7nbfjvcc6s9vxdzw7j5xfkd2qdnp9qki";
+        authors = [
+          "The nix-rust Project Developers"
+        ];
+        dependencies = [
+          {
+            name = "bitflags";
+            packageId = "bitflags";
+          }
+          {
+            name = "cfg-if";
+            packageId = "cfg-if";
+          }
+          {
+            name = "libc";
+            packageId = "libc";
+            features = [ "extra_traits" ];
+          }
+        ];
+        buildDependencies = [
+          {
+            name = "cfg_aliases";
+            packageId = "cfg_aliases";
+          }
+        ];
+        features = {
+          "aio" = [ "pin-utils" ];
+          "dir" = [ "fs" ];
+          "memoffset" = [ "dep:memoffset" ];
+          "mount" = [ "uio" ];
+          "mqueue" = [ "fs" ];
+          "net" = [ "socket" ];
+          "pin-utils" = [ "dep:pin-utils" ];
+          "ptrace" = [ "process" ];
+          "sched" = [ "process" ];
+          "signal" = [ "process" ];
+          "socket" = [ "memoffset" ];
+          "ucontext" = [ "signal" ];
+          "user" = [ "feature" ];
+          "zerocopy" = [ "fs" "uio" ];
+        };
+        resolvedDefaultFeatures = [ "default" "feature" "hostname" "term" "user" ];
       };
       "option-ext" = rec {
         crateName = "option-ext";
@@ -389,10 +424,6 @@ rec {
             packageId = "dirs";
           }
           {
-            name = "gethostname";
-            packageId = "gethostname";
-          }
-          {
             name = "lazycell";
             packageId = "lazycell";
             usesDefaultFeatures = false;
@@ -400,6 +431,11 @@ rec {
           {
             name = "libc";
             packageId = "libc";
+          }
+          {
+            name = "nix";
+            packageId = "nix";
+            features = [ "hostname" "user" "term" ];
           }
         ];
 

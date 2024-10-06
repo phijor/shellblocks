@@ -6,15 +6,17 @@ use crate::block::Block;
 use crate::source::{Context, Source};
 use crate::style::{BaseColor, Brightness, Color, Style};
 
-use gethostname::gethostname;
+use nix::unistd::gethostname;
 
 #[derive(Default)]
 pub struct Host;
 
 impl Source for Host {
     fn get_block(&self, _: &Context) -> Option<Block> {
+        let hostname = gethostname().ok()?.into_string().ok()?;
+
         Some(
-            Block::new(gethostname().to_str()?.to_string()).with_style(
+            Block::new(hostname).with_style(
                 Style::new()
                     .with_fg(Color::new(BaseColor::Black, Brightness::Normal))
                     .with_bg(Color::new(BaseColor::Blue, Brightness::Normal)),

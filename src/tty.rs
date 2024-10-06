@@ -7,9 +7,9 @@ use crate::source::{Context, Source};
 use crate::style::{BaseColor, Brightness, Color, Style};
 
 use std::env;
-use std::ffi::{CStr, OsStr};
-use std::os::unix::ffi::OsStrExt;
 use std::path::PathBuf;
+
+use nix::unistd::ttyname;
 
 const STYLE: Style = Style::new()
     .with_fg(Color::new(BaseColor::Black, Brightness::Normal))
@@ -24,19 +24,7 @@ impl Tty {
     }
 
     pub fn from_system() -> Option<PathBuf> {
-        let path = unsafe {
-            use libc::{c_char, ttyname, STDIN_FILENO};
-            let path: *mut c_char = ttyname(STDIN_FILENO);
-
-            if path.is_null() {
-                return None;
-            } else {
-                let path = CStr::from_ptr(path);
-                PathBuf::from(OsStr::from_bytes(path.to_bytes()))
-            }
-        };
-
-        Some(path)
+        ttyname(std::io::stdin()).ok()
     }
 }
 
