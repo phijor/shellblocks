@@ -429,10 +429,6 @@ rec {
             usesDefaultFeatures = false;
           }
           {
-            name = "libc";
-            packageId = "libc";
-          }
-          {
             name = "nix";
             packageId = "nix";
             features = [ "hostname" "user" "term" ];
