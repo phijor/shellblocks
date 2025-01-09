@@ -17,9 +17,18 @@ pub struct Context {
     current_dir: LazyCell<PathBuf>,
 }
 
+fn get_current_dir() -> PathBuf {
+    if let Some(dir) = std::env::var_os("SHELLBLOCKS_DIR") {
+        PathBuf::from(dir)
+    } else if let Ok(cwd) = std::env::current_dir() {
+        cwd
+    } else {
+        ".".into()
+    }
+}
+
 impl Context {
     pub fn current_dir(&self) -> &Path {
-        self.current_dir
-            .borrow_with(|| std::env::current_dir().unwrap_or_else(|_| ".".into()))
+        self.current_dir.borrow_with(get_current_dir)
     }
 }
